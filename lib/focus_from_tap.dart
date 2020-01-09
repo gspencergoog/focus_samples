@@ -1,6 +1,10 @@
 // Copyright 2014 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+
+// This example demonstrates being able to focus an item on a tap, and also
+// unfocusing when tapping on a background.
+
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -22,14 +26,16 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  static const String title = 'Focus From Tap Example';
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: title,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: title),
     );
   }
 }

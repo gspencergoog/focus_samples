@@ -2,6 +2,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// This example shows how to take a non-focusable element and wrap it so that it
+// is focusable, and shows a focus highlight.
+
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -23,14 +26,16 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  static const String title = 'Make Focusable Example';
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: title,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: title),
     );
   }
 }
@@ -60,11 +65,9 @@ class MyList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemBuilder: (context, index) => ListTile(
-        title: FocusableText(
-          index.toString(),
-          autofocus: index == 0,
-        ),
+      itemBuilder: (context, index) => FocusableText(
+        'Item $index',
+        autofocus: index == 0,
       ),
       itemCount: 50,
     );
@@ -83,6 +86,7 @@ class FocusableText extends StatelessWidget {
       autofocus: autofocus,
       child: Builder(builder: (BuildContext context) {
         return Container(
+          padding: EdgeInsets.all(8.0),
           color: Focus.of(context).hasPrimaryFocus ? Colors.black12 : null,
           child: Text(data),
         );
