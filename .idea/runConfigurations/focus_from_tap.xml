@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="focus_from_tap" type="FlutterRunConfigurationType" factoryName="Flutter">
+  <configuration default="false" name="focus_from_tap" type="FlutterRunConfigurationType" factoryName="Flutter" singleton="false">
     <option name="filePath" value="$PROJECT_DIR$/lib/focus_from_tap.dart" />
     <method v="2" />
   </configuration>
