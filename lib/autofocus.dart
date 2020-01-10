@@ -4,7 +4,6 @@
 
 // This example demonstrates being able to focus a newly created item.
 
-import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -25,7 +24,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  static const String title = 'Focus From Tap Example';
+  static const String title = 'Focus New Widget Example';
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +52,6 @@ class _MyHomePageState extends State<MyHomePage> {
   int focusedChild = 0;
   List<Widget> children = <Widget>[];
   List<FocusNode> childFocusNodes = <FocusNode>[];
-  FocusNode wrapFocus = FocusNode(debugLabel: 'Wrap');
 
   @override
   void initState() {
@@ -64,7 +62,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void dispose() {
     super.dispose();
-    wrapFocus.dispose();
     childFocusNodes.forEach((FocusNode node) => node.dispose());
   }
 
@@ -85,7 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _addChild() {
     childFocusNodes.add(FocusNode(debugLabel: 'Item ${children.length}'));
-    childFocusNodes.last.requestFocusOnAttach();
+    childFocusNodes.last.requestFocusOnAttach = true;
     children.add(_createChild(children.length));
   }
 
@@ -96,21 +93,15 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Focus(
-          focusNode: wrapFocus,
-          canRequestFocus: false,
-          child: Wrap(
-            children: children,
-          ),
+        child: Wrap(
+          children: children,
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           setState(() {
-            wrapFocus.unfocus();
             focusedChild = childCount - 1;
             _addChild();
-
           });
         },
         child: Icon(Icons.add),
