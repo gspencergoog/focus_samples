@@ -69,7 +69,6 @@ class _MyHomePageState extends State<MyHomePage> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: RaisedButton(
-        key: GlobalKey(),
         focusNode: childFocusNodes[index],
         focusColor: Colors.redAccent,
         child: Text(
@@ -81,8 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _addChild() {
-    childFocusNodes.add(FocusNode(debugLabel: 'Item ${children.length}'));
-    childFocusNodes.last.requestFocusOnAttach = true;
+    childFocusNodes.add(FocusNode(debugLabel: 'Child ${children.length}', requestFocusWhenReparented: true));
     children.add(_createChild(children.length));
   }
 
