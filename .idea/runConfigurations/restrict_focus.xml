@@ -1,0 +1,6 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="restrict_focus" type="FlutterRunConfigurationType" factoryName="Flutter" singleton="false">
+    <option name="filePath" value="$PROJECT_DIR$/lib/restrict_focus.dart" />
+    <method v="2" />
+  </configuration>
+</component>

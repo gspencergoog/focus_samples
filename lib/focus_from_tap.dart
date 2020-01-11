@@ -60,7 +60,8 @@ class _MyHomePageState extends State<MyHomePage> {
         behavior: HitTestBehavior.translucent,
         onTap: () {
           // Unfocus the current focus if the background is tapped on.
-          FocusManager.instance.primaryFocus.unfocus();
+          // The focusPrevious argument says to
+          FocusManager.instance.primaryFocus.unfocus(focusPrevious: true);
         },
         child: Center(
           child: Row(

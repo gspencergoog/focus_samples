@@ -33,22 +33,21 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: title),
+      home: ChildCreator(title: title),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+class ChildCreator extends StatefulWidget {
+  ChildCreator({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _ChildCreatorState createState() => _ChildCreatorState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int childCount = 1;
+class _ChildCreatorState extends State<ChildCreator> {
   int focusedChild = 0;
   List<Widget> children = <Widget>[];
   List<FocusNode> childFocusNodes = <FocusNode>[];
@@ -56,6 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+    // Add the first child.
     _addChild();
   }
 
@@ -80,7 +80,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _addChild() {
-    childFocusNodes.add(FocusNode(debugLabel: 'Child ${children.length}', requestFocusWhenReparented: true));
+
+    // Calling requestFocus here creates a deferred request for focus, since the
+    // node is not yet part of the focus tree.
+    childFocusNodes.add(FocusNode(debugLabel: 'Child ${children.length}')..requestFocus());
+
     children.add(_createChild(children.length));
   }
 
@@ -98,7 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           setState(() {
-            focusedChild = childCount - 1;
+            focusedChild = children.length;
             _addChild();
           });
         },
