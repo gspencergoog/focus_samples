@@ -2,8 +2,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// This example demonstrates being able to focus an item on a tap, and also
-// unfocusing when tapping on a background.
+// This example demonstrates being able to restrict focus to a particular
+// portion of the app. In this case, restricting focus to the visible part of a
+// Stack.
 
 import 'dart:io';
 
