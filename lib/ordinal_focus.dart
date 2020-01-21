@@ -8,7 +8,6 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/semantics.dart';
 import 'package:flutter/material.dart';
 
 // Sets a platform override for desktop to avoid exceptions. See
@@ -27,7 +26,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  static const String title = 'Restrict Focus Example';
+  static const String title = 'Ordered Focus Example';
 
   @override
   Widget build(BuildContext context) {
@@ -39,15 +38,6 @@ class MyApp extends StatelessWidget {
       home: OrderedTraversalPage(title: title),
     );
   }
-}
-
-class OrderedTraversalPage extends StatefulWidget {
-  OrderedTraversalPage({Key key, this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  _OrderedTraversalPageState createState() => _OrderedTraversalPageState();
 }
 
 class DemoButton extends StatefulWidget {
@@ -94,8 +84,8 @@ class _DemoButtonState extends State<DemoButton> {
 
   @override
   Widget build(BuildContext context) {
-    return TraversalOrder(
-      order: OrdinalSortKey(widget.order),
+    return FocusTraversalOrder(
+      order: NumericFocusOrder(widget.order),
       child: FlatButton(
         focusNode: focusNode,
         autofocus: widget.autofocus,
@@ -108,54 +98,47 @@ class _DemoButtonState extends State<DemoButton> {
   }
 }
 
-class _OrderedTraversalPageState extends State<OrderedTraversalPage> {
-  @override
-  void dispose() {
-    super.dispose();
-  }
+class OrderedTraversalPage extends StatelessWidget {
+  OrderedTraversalPage({Key key, this.title}) : super(key: key);
+
+  final String title;
 
   @override
   Widget build(BuildContext context) {
     return DefaultFocusTraversal(
-      policy: OrdinalFocusTraversalPolicy(),
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
-        ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const <Widget>[
-                DemoButton(
-                  name: 'One',
-                  autofocus: true,
-                  order: 6,
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const <Widget>[
-                DemoButton(name: 'Two', order: 5),
-                DemoButton(
-                  name: 'Three',
-                  canRequestFocus: false,
-                  order: 4,
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const <Widget>[
-                DemoButton(name: 'Four', order: 3),
-                DemoButton(name: 'Five', order: 2),
-                DemoButton(name: 'Six', order: 1),
-              ],
-            ),
-          ],
-        ),
+      policy: OrderedFocusTraversalPolicy(),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const <Widget>[
+              DemoButton(
+                name: 'Six',
+                order: 6,
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const <Widget>[
+              DemoButton(name: 'Five', order: 5),
+              DemoButton(
+                name: 'Four',
+                canRequestFocus: false,
+                order: 4,
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const <Widget>[
+              DemoButton(name: 'Three', order: 3),
+              DemoButton(name: 'Two', order: 2),
+              DemoButton(name: 'One', order: 1, autofocus: true),
+            ],
+          ),
+        ],
       ),
     );
   }
