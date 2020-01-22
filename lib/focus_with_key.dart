@@ -9,7 +9,6 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 // Sets a platform override for desktop to avoid exceptions. See
 // https://flutter.dev/desktop#target-platform-override for more info.
@@ -26,7 +25,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  static const String title = 'Focus From Tap Example';
+  static const String title = 'Focus with GlobalKey Example';
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +49,15 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  List<GlobalKey> buttonKeys;
+  static const int buttonCount = 2;
+
+  @override
+  void initState() {
+    super.initState();
+    buttonKeys = List<GlobalKey>.generate(buttonCount, (int index) => GlobalKey(debugLabel: 'Button $index'));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,75 +76,47 @@ class _MyHomePageState extends State<MyHomePage> {
           FocusManager.instance.primaryFocus.unfocus(focusPrevious: true);
         },
         child: Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            // We want more than one, to illustrate that focus is only on the
-            // tapped one.
-            children: List<Widget>.generate(2, (int index) {
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: FocusOnTapColorButton(
-                  child: Container(
-                    alignment: Alignment.center,
-                    width: 100,
-                    height: 100,
+          child: Column(
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                // We want more than one, to illustrate that focus is only on the
+                // tapped one.
+                children: List<Widget>.generate(buttonCount, (int index) {
+                  return FlatButton(
+                    focusColor: Colors.red,
+                    onPressed: () {},
                     child: Text(
-                      'Tap Me and press R, G, B.',
+                      'Button $index',
                       textAlign: TextAlign.center,
+                      key: buttonKeys[index],
                     ),
-                  ),
-                ),
-              );
-            }),
+                  );
+                }),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                // We want more than one, to illustrate that focus is only on the
+                // tapped one.
+                children: List<Widget>.generate(buttonCount, (int index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: FlatButton(
+                      child: Text(
+                        'Focus Button $index',
+                        textAlign: TextAlign.center,
+                      ),
+                      onPressed: () {
+                        Focus.of(buttonKeys[index].currentContext).requestFocus();
+                      },
+                    ),
+                  );
+                }),
+              ),
+            ],
           ),
         ),
       ),
-    );
-  }
-}
-
-class FocusOnTapColorButton extends StatefulWidget {
-  const FocusOnTapColorButton({this.child, Key key}) : super(key: key);
-
-  final Widget child;
-
-  @override
-  _FocusOnTapColorButtonState createState() => _FocusOnTapColorButtonState();
-}
-
-class _FocusOnTapColorButtonState extends State<FocusOnTapColorButton> {
-  Color _currentColor = Colors.grey;
-
-  bool _handleKeypress(FocusNode node, RawKeyEvent event) {
-    if (event is! RawKeyDownEvent) {
-      return false;
-    }
-    final Map<LogicalKeyboardKey, Color> colorMap = <LogicalKeyboardKey, Color>{
-      LogicalKeyboardKey.keyR: Colors.red,
-      LogicalKeyboardKey.keyG: Colors.green,
-      LogicalKeyboardKey.keyB: Colors.blue,
-    };
-    if (colorMap.containsKey(event.logicalKey)) {
-      setState(() {
-        _currentColor = colorMap[event.logicalKey];
-      });
-      return true;
-    }
-    return false;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Focus(
-      onKey: _handleKeypress,
-      child: Builder(builder: (BuildContext context) {
-        return GestureDetector(
-          onTap: () {
-            Focus.of(context).requestFocus();
-          },
-          child: Container(color: _currentColor, child: widget.child),
-        );
-      }),
     );
   }
 }
