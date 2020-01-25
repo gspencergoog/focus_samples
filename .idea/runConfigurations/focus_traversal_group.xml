@@ -1,0 +1,6 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="focus_traversal_group" type="FlutterRunConfigurationType" factoryName="Flutter" singleton="false">
+    <option name="filePath" value="$PROJECT_DIR$/lib/focus_traversal_group.dart" />
+    <method v="2" />
+  </configuration>
+</component>

@@ -40,19 +40,19 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class OrderedButton extends StatefulWidget {
+class OrderedButton<T> extends StatefulWidget {
   const OrderedButton({this.name, this.canRequestFocus = true, this.autofocus = false, this.order});
 
   final String name;
   final bool canRequestFocus;
   final bool autofocus;
-  final double order;
+  final T order;
 
   @override
   _OrderedButtonState createState() => _OrderedButtonState();
 }
 
-class _OrderedButtonState extends State<OrderedButton> {
+class _OrderedButtonState<T> extends State<OrderedButton<T>> {
   FocusNode focusNode;
 
   @override
@@ -85,14 +85,17 @@ class _OrderedButtonState extends State<OrderedButton> {
   @override
   Widget build(BuildContext context) {
     return FocusTraversalOrder(
-      order: NumericFocusOrder(widget.order),
-      child: FlatButton(
-        focusNode: focusNode,
-        autofocus: widget.autofocus,
-        focusColor: Colors.red,
-        hoverColor: Colors.blue,
-        onPressed: () => _handleOnPressed(),
-        child: Text(widget.name),
+      order: widget.order is double ? NumericFocusOrder(widget.order as double) : LexicalFocusOrder(widget.order.toString()),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: OutlineButton(
+          focusNode: focusNode,
+          autofocus: widget.autofocus,
+          focusColor: Colors.red,
+          hoverColor: Colors.blue,
+          onPressed: () => _handleOnPressed(),
+          child: Text(widget.name),
+        ),
       ),
     );
   }
@@ -105,40 +108,55 @@ class OrderedTraversalPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FocusTraversalGroup(
-      policy: OrderedTraversalPolicy(),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const <Widget>[
-              OrderedButton(
-                name: 'Six',
-                order: 6,
+    return Container(
+      color: Colors.white,
+      child: FocusTraversalGroup(
+        policy: OrderedTraversalPolicy(),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            FocusTraversalGroup(
+              policy: OrderedTraversalPolicy(),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List<Widget>.generate(3, (int index) {
+                  return OrderedButton<double>(
+                    name: 'double: $index',
+                    order: index.toDouble(),
+                  );
+                }),
               ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const <Widget>[
-              OrderedButton(name: 'Five', order: 5),
-              OrderedButton(
-                name: 'Four',
-                canRequestFocus: false,
-                order: 4,
+            ),
+            FocusTraversalGroup(
+              policy: OrderedTraversalPolicy(),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List<Widget>.generate(3, (int index) {
+                  // Order as "C" "B", "A".
+                  String order = String.fromCharCode('A'.codeUnitAt(0) + (2 - index));
+                  return OrderedButton<String>(
+                    name: 'String: $order',
+                    order: order,
+                  );
+                }),
               ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const <Widget>[
-              OrderedButton(name: 'Three', order: 3),
-              OrderedButton(name: 'Two', order: 2),
-              OrderedButton(name: 'One', order: 1, autofocus: true),
-            ],
-          ),
-        ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List<Widget>.generate(3, (int index) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: OutlineButton(
+                    focusColor: Colors.red,
+                    hoverColor: Colors.blue,
+                    onPressed: () {},
+                    child: Text('No order $index'),
+                  ),
+                );
+              }),
+            ),
+          ],
+        ),
       ),
     );
   }
