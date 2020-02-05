@@ -5,6 +5,7 @@
 // This example demonstrates being able to set the focus order based on an
 // ordinal value, allowing an explicit focus order.
 
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -84,6 +85,7 @@ class _OrderedButtonState<T> extends State<OrderedButton<T>> {
 
   @override
   Widget build(BuildContext context) {
+    print('Adding widget with order ${widget.order}');
     return FocusTraversalOrder(
       order: widget.order is double ? NumericFocusOrder(widget.order as double) : LexicalFocusOrder(widget.order.toString()),
       child: Padding(
@@ -108,6 +110,10 @@ class OrderedTraversalPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+//    scheduleMicrotask((){
+//      debugDumpFocusTree();
+//      debugDumpApp();
+//    });
     return Container(
       color: Colors.white,
       child: FocusTraversalGroup(
@@ -115,6 +121,7 @@ class OrderedTraversalPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            // A group that is ordered with a numerical order, from left to right.
             FocusTraversalGroup(
               policy: OrderedTraversalPolicy(),
               child: Row(
@@ -127,6 +134,7 @@ class OrderedTraversalPage extends StatelessWidget {
                 }),
               ),
             ),
+            // A group that is ordered with a lexical order, from right to left.
             FocusTraversalGroup(
               policy: OrderedTraversalPolicy(),
               child: Row(
@@ -141,19 +149,18 @@ class OrderedTraversalPage extends StatelessWidget {
                 }),
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List<Widget>.generate(3, (int index) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: OutlineButton(
-                    focusColor: Colors.red,
-                    hoverColor: Colors.blue,
-                    onPressed: () {},
-                    child: Text('No order $index'),
-                  ),
-                );
-              }),
+            // A group that orders in widget order, regardless of what the order is set to.
+            FocusTraversalGroup(
+              policy: WidgetOrderTraversalPolicy(),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List<Widget>.generate(3, (int index) {
+                  return OrderedButton<double>(
+                    name: 'double: ${2 - index}',
+                    order: (2 - index).toDouble(),
+                  );
+                }),
+              ),
             ),
           ],
         ),
