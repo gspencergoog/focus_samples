@@ -70,18 +70,15 @@ class _NudgeExampleState extends State<NudgeExample> {
   bool enabled = true;
   NudgeAction action = NudgeAction();
 
-  static double nudgeSize = 5.0;
-  static double jumpSize = 20.0;
-
   static final Map<LogicalKeySet, Intent> _shortcuts = <LogicalKeySet, Intent>{
-    LogicalKeySet(LogicalKeyboardKey.arrowUp): NudgeIntent(direction: AxisDirection.up, amount: nudgeSize),
-    LogicalKeySet(LogicalKeyboardKey.arrowDown): NudgeIntent(direction: AxisDirection.down, amount: nudgeSize),
-    LogicalKeySet(LogicalKeyboardKey.arrowLeft): NudgeIntent(direction: AxisDirection.left, amount: nudgeSize),
-    LogicalKeySet(LogicalKeyboardKey.arrowRight): NudgeIntent(direction: AxisDirection.right, amount: nudgeSize),
-    LogicalKeySet(LogicalKeyboardKey.shift, LogicalKeyboardKey.arrowUp): NudgeIntent(direction: AxisDirection.up, amount: jumpSize),
-    LogicalKeySet(LogicalKeyboardKey.shift, LogicalKeyboardKey.arrowDown): NudgeIntent(direction: AxisDirection.down, amount: jumpSize),
-    LogicalKeySet(LogicalKeyboardKey.shift, LogicalKeyboardKey.arrowLeft): NudgeIntent(direction: AxisDirection.left, amount: jumpSize),
-    LogicalKeySet(LogicalKeyboardKey.shift, LogicalKeyboardKey.arrowRight): NudgeIntent(direction: AxisDirection.right, amount: jumpSize),
+    LogicalKeySet(LogicalKeyboardKey.arrowUp): NudgeIntent(direction: AxisDirection.up),
+    LogicalKeySet(LogicalKeyboardKey.arrowDown): NudgeIntent(direction: AxisDirection.down),
+    LogicalKeySet(LogicalKeyboardKey.arrowLeft): NudgeIntent(direction: AxisDirection.left),
+    LogicalKeySet(LogicalKeyboardKey.arrowRight): NudgeIntent(direction: AxisDirection.right),
+    LogicalKeySet(LogicalKeyboardKey.shift, LogicalKeyboardKey.arrowUp): JumpIntent(direction: AxisDirection.up),
+    LogicalKeySet(LogicalKeyboardKey.shift, LogicalKeyboardKey.arrowDown): JumpIntent(direction: AxisDirection.down),
+    LogicalKeySet(LogicalKeyboardKey.shift, LogicalKeyboardKey.arrowLeft): JumpIntent(direction: AxisDirection.left),
+    LogicalKeySet(LogicalKeyboardKey.shift, LogicalKeyboardKey.arrowRight): JumpIntent(direction: AxisDirection.right),
   };
 
   @override
@@ -89,7 +86,7 @@ class _NudgeExampleState extends State<NudgeExample> {
     return Shortcuts(
       shortcuts: _shortcuts,
       child: Actions(
-        actions: <Type, Action>{ NudgeIntent: action },
+        actions: <Type, Action>{ NudgeIntent: action, JumpIntent: action },
         child: Stack(
           children: <Widget>[
             NudgeCanvas(),
@@ -154,10 +151,14 @@ abstract class ChangedValueAction<I extends Intent, T> extends Action<I> {
 }
 
 class NudgeIntent extends Intent {
-  NudgeIntent({this.direction, this.amount});
+  NudgeIntent({this.direction, this.amount = 5.0});
 
   final AxisDirection direction;
   final double amount;
+}
+
+class JumpIntent extends NudgeIntent {
+  JumpIntent({AxisDirection direction}) : super(direction: direction, amount: 20.0);
 }
 
 class NudgeAction extends ChangedValueAction<NudgeIntent, Offset> {

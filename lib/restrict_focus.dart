@@ -95,7 +95,7 @@ class _PageWithBackdropState extends State<PageWithBackdrop> {
                   onPressed: () => print('You pressed the other button!'),
                   child: Text('ANOTHER BUTTON TO FOCUS'),
                 ),
-                DefaultTextStyle(style: Theme.of(context).textTheme.display3, child: Text('BACKDROP')),
+                DefaultTextStyle(style: Theme.of(context).textTheme.headline2, child: Text('BACKDROP')),
               ],
             ),
           ),
@@ -120,7 +120,7 @@ class _PageWithBackdropState extends State<PageWithBackdrop> {
             // yourself that the hidden components do/don't get focus.
             backgroundColor: Colors.green,
             onPressed: backdropIsVisible ? null : () => setState(() => backdropIsVisible = true),
-            child: DefaultTextStyle(style: Theme.of(context).textTheme.display3, child: Text('FOREGROUND')),
+            child: DefaultTextStyle(style: Theme.of(context).textTheme.headline2, child: Text('FOREGROUND')),
           ),
         ),
       ],
