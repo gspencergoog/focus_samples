@@ -78,10 +78,7 @@ class ChangeColorAction extends ActivateAction {
   final ValueChanged<Color> onColorChanged;
 
   @override
-  Object invoke(Intent intent) {
-    onColorChanged?.call(color);
-    return null;
-  }
+  void invoke(FocusNode node, Intent intent) => onColorChanged?.call(color);
 }
 
 class FocusableActionText extends StatefulWidget {
@@ -95,7 +92,7 @@ class FocusableActionText extends StatefulWidget {
 }
 
 class _FocusableActionTextState extends State<FocusableActionText> {
-  Map<Type, Action<Intent>> _actionMap;
+  Map<LocalKey, ActionFactory> _actionMap;
   Color _focusColor = Colors.black12;
   static final List<Color> colors = <Color>[
     Colors.red.withOpacity(0.5),
@@ -107,11 +104,8 @@ class _FocusableActionTextState extends State<FocusableActionText> {
   @override
   void initState() {
     super.initState();
-    _actionMap = <Type, Action<Intent>>{
-      ActivateIntent: ChangeColorAction(
-        colors[_colorIndex],
-        onColorChanged: _updateColor,
-      ),
+    _actionMap = <LocalKey, ActionFactory>{
+      ActivateAction.key: _createAction,
     };
   }
 
@@ -120,6 +114,13 @@ class _FocusableActionTextState extends State<FocusableActionText> {
       _focusColor = color;
       _colorIndex = (_colorIndex + 1) % colors.length;
     });
+  }
+
+  Action _createAction() {
+    return ChangeColorAction(
+      colors[_colorIndex],
+      onColorChanged: _updateColor,
+    );
   }
 
   bool _focused = false;
