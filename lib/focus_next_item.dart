@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// This example demonstrates being able to focus an item on a tap, and also
-// unfocusing when tapping on a background.
+// This example demonstrates moving the focus to the next field when enter is
+// pressed.
 
 import 'dart:io';
 
@@ -26,7 +26,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  static const String title = 'Focus From Tap Example';
+  static const String title = 'Focus Next Field Example';
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +59,12 @@ class _MyHomePageState extends State<MyHomePage> {
       body: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () {
-          // Unfocus the current focus if the background is tapped on.
+          // Unfocus the current focus if the background is tapped on. The
+          // focusPrevious argument says to focus the previously focused item in
+          // the scope, if any, and to focus the scope itself if not. If set to
+          // false (the default), then the root focus node
+          // (FocusManager.instance.rootScope) will be focused, causing all
+          // other nodes to not be focused.
           FocusManager.instance.primaryFocus.unfocus();
         },
         child: Center(
@@ -70,16 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
             children: List<Widget>.generate(2, (int index) {
               return Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: FocusOnTapColorButton(
-                  child: Container(
-                    alignment: Alignment.center,
-                    width: 100,
-                    height: 100,
-                    child: Text(
-                      'Tap Me and press R, G, B.',
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
+                child: TextFormField(
                 ),
               );
             }),
