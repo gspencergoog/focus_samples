@@ -56,78 +56,37 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onTap: () {
-          // Unfocus the current focus if the background is tapped on. The
-          // focusPrevious argument says to focus the previously focused item in
-          // the scope, if any, and to focus the scope itself if not. If set to
-          // false (the default), then the root focus node
-          // (FocusManager.instance.rootScope) will be focused, causing all
-          // other nodes to not be focused.
-          FocusManager.instance.primaryFocus.unfocus();
-        },
-        child: Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            // We want more than one, to illustrate that focus is only on the
-            // tapped one.
-            children: List<Widget>.generate(2, (int index) {
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFormField(
-                ),
-              );
-            }),
+      body: Center(
+        child: Shortcuts(
+          shortcuts: <LogicalKeySet, Intent>{
+            // Pressing enter on the field should move to the next field.
+            LogicalKeySet(LogicalKeyboardKey.enter): Intent(NextFocusAction.key),
+          },
+          child: FocusTraversalGroup(
+            child: Form(
+              autovalidate: true,
+              onChanged: () {
+                Form.of(primaryFocus.context).save();
+              },
+              child: Wrap(
+                children: List<Widget>.generate(5, (int index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints.tight(Size(200, 50)),
+                      child: TextFormField(
+                        onSaved: (String value) {
+                          print('Value for field $index saved as "$value"');
+                        },
+                      ),
+                    ),
+                  );
+                }),
+              ),
+            ),
           ),
         ),
       ),
-    );
-  }
-}
-
-class FocusOnTapColorButton extends StatefulWidget {
-  const FocusOnTapColorButton({this.child, Key key}) : super(key: key);
-
-  final Widget child;
-
-  @override
-  _FocusOnTapColorButtonState createState() => _FocusOnTapColorButtonState();
-}
-
-class _FocusOnTapColorButtonState extends State<FocusOnTapColorButton> {
-  Color _currentColor = Colors.grey;
-
-  bool _handleKeypress(FocusNode node, RawKeyEvent event) {
-    if (event is! RawKeyDownEvent) {
-      return false;
-    }
-    final Map<LogicalKeyboardKey, Color> colorMap = <LogicalKeyboardKey, Color>{
-      LogicalKeyboardKey.keyR: Colors.red,
-      LogicalKeyboardKey.keyG: Colors.green,
-      LogicalKeyboardKey.keyB: Colors.blue,
-    };
-    if (colorMap.containsKey(event.logicalKey)) {
-      setState(() {
-        _currentColor = colorMap[event.logicalKey];
-      });
-      return true;
-    }
-    return false;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Focus(
-      onKey: _handleKeypress,
-      child: Builder(builder: (BuildContext context) {
-        return GestureDetector(
-          onTap: () {
-            Focus.of(context).requestFocus();
-          },
-          child: Container(color: _currentColor, child: widget.child),
-        );
-      }),
     );
   }
 }

@@ -59,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () {
-          // Unfocus the current focus if the background is tapped on.
+          // Unfocus the primary focus if the background is tapped on.
           FocusManager.instance.primaryFocus.unfocus();
         },
         child: Center(
