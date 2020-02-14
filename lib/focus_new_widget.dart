@@ -65,27 +65,19 @@ class _ChildCreatorState extends State<ChildCreator> {
     childFocusNodes.forEach((FocusNode node) => node.dispose());
   }
 
-  Widget _createChild(int index) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: RaisedButton(
-        focusNode: childFocusNodes[index],
-        focusColor: Colors.redAccent,
-        child: Text(
-          'CHILD $index',
-        ),
-        onPressed: () {},
-      ),
-    );
-  }
-
   void _addChild() {
-
     // Calling requestFocus here creates a deferred request for focus, since the
     // node is not yet part of the focus tree.
     childFocusNodes.add(FocusNode(debugLabel: 'Child ${children.length}')..requestFocus());
 
-    children.add(_createChild(children.length));
+    children.add(Padding(
+      padding: const EdgeInsets.all(2.0),
+      child: ActionChip(
+        focusNode: childFocusNodes.last,
+        label: Text('CHILD ${children.length}'),
+        onPressed: () {},
+      ),
+    ));
   }
 
   @override

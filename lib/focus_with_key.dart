@@ -34,15 +34,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: title),
+      home: MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  final String title;
+  MyHomePage({Key key}) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -60,58 +58,58 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onTap: () {
-          // Unfocus the primary focus if the background is tapped on.
-          FocusManager.instance.primaryFocus.unfocus();
-        },
-        child: Center(
-          child: Column(
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                // We want more than one, to illustrate that focus is only on the
-                // tapped one.
-                children: List<Widget>.generate(buttonCount, (int index) {
-                  return FlatButton(
-                    focusColor: Colors.red,
-                    onPressed: () {},
-                    child: Text(
-                      'Button $index',
-                      textAlign: TextAlign.center,
-                      key: buttonKeys[index],
-                    ),
-                  );
-                }),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                // We want more than one, to illustrate that focus is only on the
-                // tapped one.
-                children: List<Widget>.generate(buttonCount, (int index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: FlatButton(
+    return StreamBuilder<Object>(
+      stream: null,
+      builder: (context, snapshot) {
+        return GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTap: () {
+            // Unfocus the primary focus if the background is tapped on.
+            FocusManager.instance.primaryFocus.unfocus();
+          },
+          child: Center(
+            child: Column(
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  // We want more than one, to illustrate that focus is only on the
+                  // tapped one.
+                  children: List<Widget>.generate(buttonCount, (int index) {
+                    return FlatButton(
+                      focusColor: Colors.red,
+                      onPressed: () {},
                       child: Text(
-                        'Focus Button $index',
+                        'Button $index',
                         textAlign: TextAlign.center,
+                        key: buttonKeys[index],
                       ),
-                      onPressed: () {
-                        Focus.of(buttonKeys[index].currentContext).requestFocus();
-                      },
-                    ),
-                  );
-                }),
-              ),
-            ],
+                    );
+                  }),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  // We want more than one, to illustrate that focus is only on the
+                  // tapped one.
+                  children: List<Widget>.generate(buttonCount, (int index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: FlatButton(
+                        child: Text(
+                          'Focus Button $index',
+                          textAlign: TextAlign.center,
+                        ),
+                        onPressed: () {
+                          Focus.of(buttonKeys[index].currentContext).requestFocus();
+                        },
+                      ),
+                    );
+                  }),
+                ),
+              ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

@@ -110,10 +110,6 @@ class OrderedTraversalPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-//    scheduleMicrotask((){
-//      debugDumpFocusTree();
-//      debugDumpApp();
-//    });
     return Container(
       color: Colors.white,
       child: FocusTraversalGroup(

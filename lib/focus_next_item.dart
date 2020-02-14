@@ -59,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: Shortcuts(
           shortcuts: <LogicalKeySet, Intent>{
-            // Pressing enter on the field should move to the next field.
+            // Pressing enter on the field will now move to the next field.
             LogicalKeySet(LogicalKeyboardKey.enter): Intent(NextFocusAction.key),
           },
           child: FocusTraversalGroup(
