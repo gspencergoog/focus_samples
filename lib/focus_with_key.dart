@@ -67,13 +67,8 @@ class _MyHomePageState extends State<MyHomePage> {
       body: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () {
-          // Unfocus the current focus if the background is tapped on. The
-          // focusPrevious argument says to focus the previously focused item in
-          // the scope, if any, and to focus the scope itself if not. If set to
-          // false (the default), then the root focus node
-          // (FocusManager.instance.rootScope) will be focused, causing all
-          // other nodes to not be focused.
-          FocusManager.instance.primaryFocus.unfocus(focusPrevious: true);
+          // Unfocus the primary focus if the background is tapped on.
+          FocusManager.instance.primaryFocus.unfocus();
         },
         child: Center(
           child: Column(

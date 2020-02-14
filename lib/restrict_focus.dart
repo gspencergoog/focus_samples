@@ -36,15 +36,13 @@ class MyApp extends StatelessWidget {
       // Make the focus highlight a little darker than usual to make it more
       // obvious.
       theme: ThemeData(focusColor: Colors.black38),
-      home: PageWithBackdrop(title: title),
+      home: PageWithBackdrop(),
     );
   }
 }
 
 class PageWithBackdrop extends StatefulWidget {
-  PageWithBackdrop({Key key, this.title}) : super(key: key);
-
-  final String title;
+  PageWithBackdrop({Key key}) : super(key: key);
 
   @override
   _PageWithBackdropState createState() => _PageWithBackdropState();
@@ -129,14 +127,9 @@ class _PageWithBackdropState extends State<PageWithBackdrop> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      // Use a LayoutBuilder so that we can base the size of the stack on the
-      // size of its parent.
-      body: LayoutBuilder(builder: _buildStack),
-    );
+    // Use a LayoutBuilder so that we can base the size of the stack on the size
+    // of its parent.
+    return LayoutBuilder(builder: _buildStack);
   }
 }
 
