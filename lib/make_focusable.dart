@@ -25,51 +25,15 @@ void main() {
   runApp(MyApp());
 }
 
+/// This Widget is the main application widget.
 class MyApp extends StatelessWidget {
-  static const String title = 'Make Focusable Example';
+  static const String _title = 'Flutter Code Sample';
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: title,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(title: title),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: MyList(),
-    );
-  }
-}
-
-class MyList extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      itemBuilder: (context, index) => FocusableText(
-        'Item $index',
-        autofocus: index == 0,
-      ),
-      itemCount: 50,
+      title: _title,
+      home: MyStatelessWidget(),
     );
   }
 }
@@ -102,6 +66,24 @@ class FocusableText extends StatelessWidget {
           child: Text(data),
         );
       }),
+    );
+  }
+}
+
+/// This is the stateless widget that the main application instantiates.
+class MyStatelessWidget extends StatelessWidget {
+  MyStatelessWidget({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: ListView.builder(
+        itemBuilder: (context, index) => FocusableText(
+          'Item $index',
+          autofocus: index == 0,
+        ),
+        itemCount: 50,
+      ),
     );
   }
 }

@@ -25,42 +25,36 @@ void main() {
   runApp(MyApp());
 }
 
+
+/// This Widget is the main application widget.
 class MyApp extends StatelessWidget {
-  static const String title = 'Focus Next Field Example';
+  static const String _title = 'Flutter Code Sample';
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: title,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(title: title),
+      title: _title,
+      home: MyStatefulWidget(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  final String title;
+class MyStatefulWidget extends StatefulWidget {
+  MyStatefulWidget({Key key}) : super(key: key);
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _MyStatefulWidgetState createState() => _MyStatefulWidgetState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  @override
+class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
+    return Material(
+      child: Center(
         child: Shortcuts(
           shortcuts: <LogicalKeySet, Intent>{
             // Pressing enter on the field will now move to the next field.
-            LogicalKeySet(LogicalKeyboardKey.enter): Intent(NextFocusAction.key),
+            LogicalKeySet(LogicalKeyboardKey.enter):
+            Intent(NextFocusAction.key),
           },
           child: FocusTraversalGroup(
             child: Form(

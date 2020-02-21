@@ -5,7 +5,6 @@
 // This example demonstrates being able to set the focus order based on an
 // ordinal value, allowing an explicit focus order.
 
-import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -36,13 +35,19 @@ class MyApp extends StatelessWidget {
       // Make the focus highlight a little darker than usual to make it more
       // obvious.
       theme: ThemeData(focusColor: Colors.black38),
-      home: OrderedTraversalPage(title: title),
+      home: MyStatelessWidget(),
     );
   }
 }
 
+/// A button wrapper that adds either a numerical or lexical order, depending on
+/// the type of T.
 class OrderedButton<T> extends StatefulWidget {
-  const OrderedButton({this.name, this.canRequestFocus = true, this.autofocus = false, this.order});
+  const OrderedButton(
+      {this.name,
+        this.canRequestFocus = true,
+        this.autofocus = false,
+        this.order});
 
   final String name;
   final bool canRequestFocus;
@@ -85,9 +90,15 @@ class _OrderedButtonState<T> extends State<OrderedButton<T>> {
 
   @override
   Widget build(BuildContext context) {
-    print('Adding widget with order ${widget.order}');
+    FocusOrder order;
+    if (widget.order is num) {
+      order = NumericFocusOrder((widget.order as num).toDouble());
+    } else {
+      order = LexicalFocusOrder(widget.order.toString());
+    }
+
     return FocusTraversalOrder(
-      order: widget.order is double ? NumericFocusOrder(widget.order as double) : LexicalFocusOrder(widget.order.toString()),
+      order: order,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: OutlineButton(
@@ -103,10 +114,9 @@ class _OrderedButtonState<T> extends State<OrderedButton<T>> {
   }
 }
 
-class OrderedTraversalPage extends StatelessWidget {
-  OrderedTraversalPage({Key key, this.title}) : super(key: key);
-
-  final String title;
+/// This is the stateless widget that the main application instantiates.
+class MyStatelessWidget extends StatelessWidget {
+  MyStatelessWidget({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -123,9 +133,10 @@ class OrderedTraversalPage extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List<Widget>.generate(3, (int index) {
-                  return OrderedButton<double>(
-                    name: 'double: $index',
-                    order: index.toDouble(),
+                  return OrderedButton<num>(
+                    name: 'num: $index',
+                    // TRY THIS: change this to "3 - index" and see how the order changes.
+                    order: index,
                   );
                 }),
               ),
@@ -137,7 +148,8 @@ class OrderedTraversalPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List<Widget>.generate(3, (int index) {
                   // Order as "C" "B", "A".
-                  String order = String.fromCharCode('A'.codeUnitAt(0) + (2 - index));
+                  String order =
+                  String.fromCharCode('A'.codeUnitAt(0) + (2 - index));
                   return OrderedButton<String>(
                     name: 'String: $order',
                     order: order,
@@ -147,13 +159,18 @@ class OrderedTraversalPage extends StatelessWidget {
             ),
             // A group that orders in widget order, regardless of what the order is set to.
             FocusTraversalGroup(
+              // Note that because this is NOT an OrderedTraversalPolicy, these
+              // "OrderedButtons" their assigned order is ignored, and they are
+              // traversed in widget order.
+              // TRY THIS: change this to "OrderedTraversalPolicy()" and see that
+              // it now follows the order set instead of widget order.
               policy: WidgetOrderTraversalPolicy(),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List<Widget>.generate(3, (int index) {
-                  return OrderedButton<double>(
-                    name: 'double: ${2 - index}',
-                    order: (2 - index).toDouble(),
+                  return OrderedButton<num>(
+                    name: 'ignored num: ${3 - index}',
+                    order: 3 - index,
                   );
                 }),
               ),

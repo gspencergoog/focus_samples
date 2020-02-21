@@ -23,31 +23,27 @@ void main() {
   runApp(MyApp());
 }
 
+/// This Widget is the main application widget.
 class MyApp extends StatelessWidget {
-  static const String title = 'Focus New Widget Example';
+  static const String _title = 'Flutter Code Sample';
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: title,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: ChildCreator(title: title),
+      title: _title,
+      home: MyStatefulWidget(),
     );
   }
 }
 
-class ChildCreator extends StatefulWidget {
-  ChildCreator({Key key, this.title}) : super(key: key);
-
-  final String title;
+class MyStatefulWidget extends StatefulWidget {
+  MyStatefulWidget({Key key}) : super(key: key);
 
   @override
-  _ChildCreatorState createState() => _ChildCreatorState();
+  _MyStatefulWidgetState createState() => _MyStatefulWidgetState();
 }
 
-class _ChildCreatorState extends State<ChildCreator> {
+class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   int focusedChild = 0;
   List<Widget> children = <Widget>[];
   List<FocusNode> childFocusNodes = <FocusNode>[];
@@ -68,7 +64,8 @@ class _ChildCreatorState extends State<ChildCreator> {
   void _addChild() {
     // Calling requestFocus here creates a deferred request for focus, since the
     // node is not yet part of the focus tree.
-    childFocusNodes.add(FocusNode(debugLabel: 'Child ${children.length}')..requestFocus());
+    childFocusNodes
+        .add(FocusNode(debugLabel: 'Child ${children.length}')..requestFocus());
 
     children.add(Padding(
       padding: const EdgeInsets.all(2.0),
@@ -83,9 +80,6 @@ class _ChildCreatorState extends State<ChildCreator> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
       body: Center(
         child: Wrap(
           children: children,

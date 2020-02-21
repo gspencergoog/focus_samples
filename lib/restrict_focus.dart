@@ -25,30 +25,71 @@ void main() {
   WidgetsApp.debugAllowBannerOverride = false;
   runApp(MyApp());
 }
-
+/// This Widget is the main application widget.
 class MyApp extends StatelessWidget {
-  static const String title = 'Restrict Focus Example';
+  static const String _title = 'Flutter Code Sample';
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: title,
-      // Make the focus highlight a little darker than usual to make it more
-      // obvious.
-      theme: ThemeData(focusColor: Colors.black38),
-      home: PageWithBackdrop(),
+      title: _title,
+      home: MyStatefulWidget(),
     );
   }
 }
 
-class PageWithBackdrop extends StatefulWidget {
-  PageWithBackdrop({Key key}) : super(key: key);
+/// A demonstration pane.
+///
+/// This is just a separate widget to simplify the example.
+class Pane extends StatelessWidget {
+  const Pane({
+    Key key,
+    this.focusNode,
+    this.onPressed,
+    this.child,
+    this.backgroundColor,
+    this.icon,
+  }) : super(key: key);
+
+  final FocusNode focusNode;
+  final VoidCallback onPressed;
+  final Widget child;
+  final Color backgroundColor;
+  final Widget icon;
 
   @override
-  _PageWithBackdropState createState() => _PageWithBackdropState();
+  Widget build(BuildContext context) {
+    return Material(
+      color: backgroundColor,
+      child: Stack(
+        fit: StackFit.expand,
+        children: <Widget>[
+          Center(
+            child: child,
+          ),
+          Align(
+            alignment: Alignment.topLeft,
+            child: IconButton(
+              autofocus: true,
+              focusNode: focusNode,
+              onPressed: onPressed,
+              icon: icon,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
-class _PageWithBackdropState extends State<PageWithBackdrop> {
+class MyStatefulWidget extends StatefulWidget {
+  MyStatefulWidget({Key key}) : super(key: key);
+
+  @override
+  _MyStatefulWidgetState createState() => _MyStatefulWidgetState();
+}
+
+class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   bool backdropIsVisible = false;
   FocusNode backdropNode = FocusNode(debugLabel: 'Close Backdrop Button');
   FocusNode foregroundNode = FocusNode(debugLabel: 'Option Button');
@@ -93,7 +134,9 @@ class _PageWithBackdropState extends State<PageWithBackdrop> {
                   onPressed: () => print('You pressed the other button!'),
                   child: Text('ANOTHER BUTTON TO FOCUS'),
                 ),
-                DefaultTextStyle(style: Theme.of(context).textTheme.headline2, child: Text('BACKDROP')),
+                DefaultTextStyle(
+                    style: Theme.of(context).textTheme.headline2,
+                    child: Text('BACKDROP')),
               ],
             ),
           ),
@@ -117,8 +160,12 @@ class _PageWithBackdropState extends State<PageWithBackdrop> {
             // TRY THIS: Try changing this to Colors.green.withOpacity(0.8) to see for
             // yourself that the hidden components do/don't get focus.
             backgroundColor: Colors.green,
-            onPressed: backdropIsVisible ? null : () => setState(() => backdropIsVisible = true),
-            child: DefaultTextStyle(style: Theme.of(context).textTheme.headline2, child: Text('FOREGROUND')),
+            onPressed: backdropIsVisible
+                ? null
+                : () => setState(() => backdropIsVisible = true),
+            child: DefaultTextStyle(
+                style: Theme.of(context).textTheme.headline2,
+                child: Text('FOREGROUND')),
           ),
         ),
       ],
@@ -130,49 +177,5 @@ class _PageWithBackdropState extends State<PageWithBackdrop> {
     // Use a LayoutBuilder so that we can base the size of the stack on the size
     // of its parent.
     return LayoutBuilder(builder: _buildStack);
-  }
-}
-
-/// A demonstration pane.
-///
-/// This is just a separate widget to simplify the example above.
-class Pane extends StatelessWidget {
-  const Pane({
-    Key key,
-    this.focusNode,
-    this.onPressed,
-    this.child,
-    this.backgroundColor,
-    this.icon,
-  }) : super(key: key);
-
-  final FocusNode focusNode;
-  final VoidCallback onPressed;
-  final Widget child;
-  final Color backgroundColor;
-  final Widget icon;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: backgroundColor,
-      child: Stack(
-        fit: StackFit.expand,
-        children: <Widget>[
-          Center(
-            child: child,
-          ),
-          Align(
-            alignment: Alignment.topLeft,
-            child: IconButton(
-              autofocus: true,
-              focusNode: focusNode,
-              onPressed: onPressed,
-              icon: icon,
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }
